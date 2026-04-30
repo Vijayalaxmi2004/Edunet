@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "dockerfile"
+  },
+  "deploy": {
+    "numReplicas": 1,
+    "startCommand": "serve -s build -l 3000"
+  }
+}
