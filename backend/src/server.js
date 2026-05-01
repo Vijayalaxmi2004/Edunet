@@ -5,12 +5,16 @@ const path = require('path');
 require('dotenv').config();
 
 const pool = require('./config/database');
+const initDatabase = require('./initDatabase');
 const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
+
+// Initialize database
+initDatabase();
 
 // Middleware
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
