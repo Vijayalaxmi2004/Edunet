@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { projectAPI, taskAPI, authAPI } from '../services/api';
 import './ProjectDetail.css';
@@ -26,12 +26,7 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchProject();
-    fetchUsers();
-  }, [projectId]);
-
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     try {
       const response = await projectAPI.getById(projectId);
       setProject(response.data.project);
@@ -44,16 +39,21 @@ export default function ProjectDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const response = await authAPI.getUsers();
       setUsers(response.data.users);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProject();
+    fetchUsers();
+  }, [fetchProject, fetchUsers]);
 
   const handleCreateTask = async (e) => {
     e.preventDefault();

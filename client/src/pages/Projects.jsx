@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { projectAPI, taskAPI } from '../services/api';
 import './Projects.css';
 
@@ -85,18 +85,18 @@ export default function Projects() {
 function ProjectCard({ project }) {
   const [stats, setStats] = useState(null);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await taskAPI.getProjectTasks(project.id);
       setStats(response.data.stats);
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, [project.id]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   return (
     <div className="project-card">
